@@ -12,11 +12,12 @@ import re
 import datetime
 
 
-DEFAULT_CRON_LINE = "{minute} {hour} * * * {sunwait} ; sleep $(( RANDOM%{random} )) ; {command}"
+DEFAULT_CRON_LINE = "{minute} {hour} * * * {sunwait} ; {random} ; {command}"
 
 NULL_COMMAND = "true"
 X10_COMMAND = "/home/x10/x10.sh"
-SUNWAIT_COMMAND = "sunwait {} $X10_LAT $X10_LNG"
+SUNWAIT_COMMAND = "sunwait {args} $X10_LAT $X10_LNG"
+RANDOM_COMMAND = "sleep $(( (RANDOM%{minutes})*60 ))"
 
 COMMENT_CHAR = "#"
 TIME_COMMAND_SEP = ";"
@@ -82,7 +83,7 @@ def parse(line):
     time = None # (hour, minute) in military time
     astro = None
     offset = 0
-    random = 0
+    random_minutes = 0
 
 
     # parse each token
@@ -95,7 +96,7 @@ def parse(line):
         elif offset_re.match(token):
             offset = int(token)
         elif random_re.match(token):
-            random = int(token[1:])
+            random_minutes = int(token[1:])
         else:
             return None # encountered unknown token, halt
 
@@ -123,12 +124,12 @@ def parse(line):
     minute = time[1] # these should always be present
     hour = time[0]
     sunwait = NULL_COMMAND
-    random_seconds = random * 60 # sleep uses seconds
+    random = NULL_COMMAND
     command = X10_COMMAND + " " + command_part
 
     # prevent a division by zero in the random wait
-    if random_seconds == 0:
-        random_seconds = 1
+    if random_minutes > 0:
+        random = RANDOM_COMMAND.format(minutes=random_minutes)
 
     if astro:
         args = ""
@@ -145,13 +146,13 @@ def parse(line):
                 t = time_add_minutes((0,0), -offset)
                 args += " -%02d:%02d" % t
 
-        sunwait = SUNWAIT_COMMAND.format(args)
+        sunwait = SUNWAIT_COMMAND.format(args=args)
 
 
     return DEFAULT_CRON_LINE.format(minute=minute, \
                                     hour=hour, \
                                     sunwait=sunwait, \
-                                    random=random_seconds, \
+                                    random=random, \
                                     command=command)
 
 
