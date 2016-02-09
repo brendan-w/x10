@@ -10,6 +10,7 @@ DEFAULT_CRON_LINE = "{minute} {hour} * * * {sunwait} ; sleep $(( RANDOM%{random}
 
 NULL_COMMAND = "true"
 X10_COMMAND = "/home/x10/x10.sh"
+SUNWAIT_COMMAND = "sunwait {} $X10_LAT $X10_LNG"
 
 COMMENT_CHAR = "#"
 TIME_COMMAND_SEP = ";"
@@ -103,6 +104,10 @@ def parse(line):
         # pick a time in the near future to activate the astronomical wait (sunwait)
         now = datetime.datetime.now().time()
         time = time_add_minutes((now.hour, now.minute), NEAR_FUTURE)
+    elif time and astro:
+        # leave it. This allows you to manually set the time that astro
+        # waits (sunwaits) will begin
+        pass
     else:
         return None # neither a time, or an astro were specified
 
@@ -120,18 +125,21 @@ def parse(line):
         random_seconds = 1
 
     if astro:
-        sunwait = "sunwait sun "
-        if   astro == "dawn": sunwait += "up"
-        elif astro == "dusk": sunwait += "down"
+        args = ""
+
+        if   astro == "dawn": args += "sun up"
+        elif astro == "dusk": args += "sun down"
 
         # use sunwait's offset facilities
         if offset:
             if offset > 0:
                 t = time_add_minutes((0,0), offset)
-                sunwait += " +%02d:%02d" % t
+                args += " +%02d:%02d" % t
             elif offset < 0:
                 t = time_add_minutes((0,0), -offset)
-                sunwait += " -%02d:%02d" % t
+                args += " -%02d:%02d" % t
+
+        sunwait = SUNWAIT_COMMAND.format(args)
 
 
     return DEFAULT_CRON_LINE.format(minute=minute, \

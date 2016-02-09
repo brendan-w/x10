@@ -41,7 +41,7 @@
 
 dawn ; C1 ON
 dusk -30 ~15 ; C1 ON
-1:00pm ~1 -30; C1 ON
--30 ~1 01:0PM; C1 ON # this is a comment
+1:00pm ~1 -30 ; C1 ON
+-30 ~1 01:0PM ; C1 ON # this is a comment
 
 12:00am dawn ; C1 ON
