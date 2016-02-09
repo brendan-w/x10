@@ -115,6 +115,10 @@ def parse(line):
     random_seconds = random * 60 # sleep uses seconds
     command = X10_COMMAND + " " + command_part
 
+    # prevent a division by zero in the random wait
+    if random_seconds == 0:
+        random_seconds = 1
+
     if astro:
         sunwait = "sunwait sun "
         if   astro == "dawn": sunwait += "up"
