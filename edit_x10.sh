@@ -3,6 +3,7 @@
 # the default schedule file
 SCHEDULE=~/schedule.x10
 TMP_CRONTAB=/tmp/x10.crontab
+CRONTAB_PARTS=./header.crontab ./location.crontab
 
 # or, if the user specified a schedule file
 if [ "$#" -e 1 ]; then
@@ -14,7 +15,7 @@ fi
 nano -Y sh $SCHEDULE
 
 # compile and write the X10 crontab
-./compile_crontab.py $SCHEDULE | cat ./header.crontab - > $TMP_CRONTAB
+./compile_crontab.py $SCHEDULE | cat $CRONTAB_PARTS - > $TMP_CRONTAB
 
 # load our crontab, and delete the temporary file
 crontab $TMP_CRONTAB
