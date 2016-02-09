@@ -1,4 +1,8 @@
 
+# never store tmp crontabs
+*.crontab
+
+
 # Created by https://www.gitignore.io/api/python
 
 ### Python ###
