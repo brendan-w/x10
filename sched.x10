@@ -18,7 +18,7 @@
 #    -5           minutes BEFORE the specified time
 #
 # <RANDOMNESS> can be:
-#    ~X           will pick a random positive offset between 0 and X minutes
+#    ~5           will pick a random positive offset between 0 and X minutes
 #                 this random offset will be ADDED to any previous specified offsets
 #                 NOTE: ~X can only be used as a positive offset (AFTER the time)
 #

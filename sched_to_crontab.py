@@ -2,16 +2,17 @@
 
 import os
 import sys
-from enum import Enum
+import re
 
-TOKEN_TYPE = Enum("time", "offset", "random")
+
 COMMENT_CHAR = "#"
 TIME_COMMAND_SEP = ";"
 DEFAULT_CRON_LINE = "{minute} {hour} * * * {sunwait} ; {random} ; br {command}"
 
 
 # token classifiers
-time_re = re.compile(r"(\d+:\d+(am|pm))|dawn|dusk$")
+time_re = re.compile(r"\d+:\d+(am|pm)$")
+astro_re = re.compile(r"dawn|dusk$")
 offset_re = re.compile(r"[+\-]\d+$")
 random_re = re.compile(r"~\d+$")
 
@@ -22,34 +23,25 @@ random_re = re.compile(r"~\d+$")
 alphabet_region = lambda start, stop: map(chr, range(ord(start), ord(stop) + 1))
 
 
-def read_time(token):
-    pass
 
 
-def read_offset(token):
-    if "+" in token:
-        offset = token[token.index("+") + 1:]
-        if offset.startswith("random("):
-    elif "-" in token:
-        pass
-    else:
-        return None
+def parse_time(token):
+    colon = token.index(":")
+    hour = int(token[:colon])
+    minute = int(token[colon+1:-2]) # -2 discards AM/PM
+
+    if token.endswith("pm"):
+        hour += 12
+
+    return (hour, minute)
 
 
-def classify_token(token):
-    if (token[0] in "+-") and (token[1:].isnumeric():
-        return TOKEN_TYPE.offset
-
-    if (token[0] == "~") and (token[1:].isnumeric():
-        return TOKEN_TYPE.random
-
-        return TOKEN_TYPE.time
-
-    if 
-
-    return None
-
-
+def time_add_minutes(time, minutes):
+    m = time[1] + minutes
+    h = time[0] + (m // 60)
+    m = m % 60
+    h = h % 24
+    return (h, m)
 
 
 def parse(line):
@@ -57,16 +49,30 @@ def parse(line):
 
     parts = line.split(TIME_COMMAND_SEP)
 
-    if len(parts) != 2:
+    if TIME_COMMAND_SEP not in line:
         return None
 
-    time_part = parts[0].strip()
-    command_part = parts[1].strip()
+    # get the position of the first seperator
+    sep_pos = line.index(TIME_COMMAND_SEP)
+
+    # split into the time and command portions
+    # and strip off any leading/trailing spaces
+    time_part = parts[:sep_pos].strip()
+    command_part = parts[sep_pos+1:].strip()
+
+
 
     # parse the time
 
     time_part = time_part.lower() # be case insensitive
     time_tokens = time_part.split() # tokenize by spaces
+
+
+    time = (0, 0) # (hour, minute) in military time
+    astro = None
+    offset = 0
+    random = 0
+
 
     # parse each token
     for token in time_tokens:
@@ -75,16 +81,19 @@ def parse(line):
             # timestamp
             pass
 
+        elif astro_re.match(token):
+            astro = token
         elif offset_re.match(token):
-            # offset
-            pass
-
+            offset = int(token)
         elif random_re.match(token):
-            # random
-            pass
-
+            random = int(token[1:])
         else:
             return None # encountered unknown token, halt
+
+    # if this is a hard coded time
+    if not astro:
+        time = time_add_minutes(time, offset)
+
 
     # build the parsed data into a cron line
 
