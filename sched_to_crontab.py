@@ -3,11 +3,17 @@
 import os
 import sys
 import re
+import datetime
 
+
+DEFAULT_CRON_LINE = "{minute} {hour} * * * {sunwait} ; sleep $(( RANDOM%{random} )) ; {command}"
+
+NULL_COMMAND = "true"
+X10_COMMAND = "/home/x10/x10.sh"
 
 COMMENT_CHAR = "#"
 TIME_COMMAND_SEP = ";"
-DEFAULT_CRON_LINE = "{minute} {hour} * * * {sunwait} ; {random} ; br {command}"
+NEAR_FUTURE = 1 # minutes
 
 
 # token classifiers
@@ -62,13 +68,13 @@ def parse(line):
 
 
 
-    # parse the time
+    # parse the time part
 
     time_part = time_part.lower() # be case insensitive
     time_tokens = time_part.split() # tokenize by spaces
 
 
-    time = (0, 0) # (hour, minute) in military time
+    time = None # (hour, minute) in military time
     astro = None
     offset = 0
     random = 0
@@ -78,9 +84,7 @@ def parse(line):
     for token in time_tokens:
         
         if time_re.match(token):
-            # timestamp
-            pass
-
+            time = parse_time(token)
         elif astro_re.match(token):
             astro = token
         elif offset_re.match(token):
@@ -90,15 +94,40 @@ def parse(line):
         else:
             return None # encountered unknown token, halt
 
-    # if this is a hard coded time
-    if not astro:
+
+    # post-process the time stamp (and ensure it's there at all)
+
+    if time and not astro:
+        # if this is a hard coded time
         time = time_add_minutes(time, offset)
+    elif astro and not time:
+        # if this is an astronomical time
+        # pick a time in the near future to activate the astronomical wait (sunwait)
+        now = datetime.datetime.now().time()
+        time = time_add_minutes((now.hour, now.minute), NEAR_FUTURE)
+    else:
+        return None # neither a time, or an astro were specified
 
 
     # build the parsed data into a cron line
 
-    cron_line = DEFAULT_CRON_LINE
+    minute = time[1] # these should always be present
+    hour = time[0]
+    sunwait = NULL_PROGRAM
+    random_seconds = random * 60 # sleep uses seconds
+    command = command_part
 
+    if astro:
+        sunwait = "sunwait sun "
+        if   astro == "dawn": sunwait += "up "
+        elif astro == "dusk": sunwait += "down "
+
+
+    return DEFAULT_CRON_LINE.format(minute=minute, \
+                                    hour=hour, \
+                                    sunwait=sunwait, \
+                                    random=random_seconds, \
+                                    command=command)
 
 
 
