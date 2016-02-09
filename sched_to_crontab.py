@@ -53,8 +53,6 @@ def time_add_minutes(time, minutes):
 def parse(line):
     """ Main parsing function """
 
-    parts = line.split(TIME_COMMAND_SEP)
-
     if TIME_COMMAND_SEP not in line:
         return None
 
@@ -63,8 +61,8 @@ def parse(line):
 
     # split into the time and command portions
     # and strip off any leading/trailing spaces
-    time_part = parts[:sep_pos].strip()
-    command_part = parts[sep_pos+1:].strip()
+    time_part = line[:sep_pos].strip()
+    command_part = line[sep_pos+1:].strip()
 
 
 
@@ -113,14 +111,23 @@ def parse(line):
 
     minute = time[1] # these should always be present
     hour = time[0]
-    sunwait = NULL_PROGRAM
+    sunwait = NULL_COMMAND
     random_seconds = random * 60 # sleep uses seconds
-    command = command_part
+    command = X10_COMMAND + " " + command_part
 
     if astro:
         sunwait = "sunwait sun "
-        if   astro == "dawn": sunwait += "up "
-        elif astro == "dusk": sunwait += "down "
+        if   astro == "dawn": sunwait += "up"
+        elif astro == "dusk": sunwait += "down"
+
+        # use sunwait's offset facilities
+        if offset:
+            if offset > 0:
+                t = time_add_minutes((0,0), offset)
+                sunwait += " +%02d:%02d" % t
+            elif offset < 0:
+                t = time_add_minutes((0,0), -offset)
+                sunwait += " -%02d:%02d" % t
 
 
     return DEFAULT_CRON_LINE.format(minute=minute, \
@@ -148,18 +155,19 @@ def main(sched_filename):
 
         for i, line in enumerate(rawlines):
             line = strip_comments(line) # remove comments
+            line = line.strip() # strip newlines and leading/trailling spaces
 
             if not line:
                 continue # skip empty lines
 
-            cron_line = parse(tokens)
+            cron_line = parse(line)
 
-            if entry.valid():
-                entries.append(entry)
+            if cron_line:
+                entries.append(cron_line)
+                print(cron_line)
             else:
-                print("invalid entry (line {}): {}".format(i, rawlines[i]))
+                print("invalid entry (line {}): {}".format(i, repr(rawlines[i])))
 
-    print(entries)
 
 
 
