@@ -1,7 +1,7 @@
 X10
 ===
 
-Personnal X10 home automation framework based on `cron`, `br`, and `sunwait`
+Personal X10 home automation framework based on `cron`, `br`, and `sunwait`
 
 
 Porcelain Commands
