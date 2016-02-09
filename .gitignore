@@ -1,7 +1,7 @@
 
-# never store tmp crontabs
-*.crontab
-
+# never store my location or schedule
+location.crontab
+schedule.x10
 
 # Created by https://www.gitignore.io/api/python
 
