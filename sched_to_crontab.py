@@ -170,7 +170,7 @@ def main(sched_filename):
                 entries.append(cron_line)
                 print(cron_line)
             else:
-                print("invalid entry (line {}): {}".format(i, repr(rawlines[i])))
+                print("invalid entry (line {}): {}".format(i, repr(rawlines[i])), file=sys.stderr)
 
 
 
