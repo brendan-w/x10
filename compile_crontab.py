@@ -88,7 +88,7 @@ def parse(line):
 
     # parse each token
     for token in time_tokens:
-        
+
         if time_re.match(token):
             time = parse_time(token)
         elif astro_re.match(token):
@@ -193,7 +193,7 @@ def main(sched_filename):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: sched_to_crontab.py <sched_file>")
+        print("Usage: %s <x10_schedule>" % sys.argv[0])
         exit()
 
     if os.path.isfile(sys.argv[1]):
