@@ -3,14 +3,17 @@
 function lock {
     if [ "$#" -ne 1 ]; then
         echo 'usage: lock [LOCKFILENAME]' 1>&2
-        return 2
+        return 1
     fi
 
     LOCKFILE="$1"
 
     # make a file with our PID
     # easy way to show who's waiting for a lock
-    touch "$LOCKFILE.$$"
+    if ! touch "$LOCKFILE.$$" ; then
+        echo "failed to create PID lockfile: $1" 1>&2
+        return 1
+    fi
 
     # try to symlink it
     while ! ln "$LOCKFILE.$$" "$LOCKFILE" 2>/dev/null

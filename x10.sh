@@ -15,11 +15,14 @@ fi
 . ./bashlock.sh
 
 # try to acquire the lock X10 lock
-lock ~/locks/x10
+if ! lock ~/locks/x10 ; then
+	echo "failed to acquire lock, aborting X10 action: $@" 1>&2
+	exit 1
+fi
 
 echo $(date) "-- X10 $@"
 
-# run each command 
+# run each command
 for i in seq 3
 do
     br $@ --port=/dev/ttyUSB0

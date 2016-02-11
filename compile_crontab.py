@@ -18,7 +18,8 @@ DEFAULT_CRON_LINE = "{minute} {hour} * * * {sunwait} ; {random} ; {command}"
 NULL_COMMAND = "true"
 X10_COMMAND = "/home/x10/x10.sh {args} >> {log} 2>&1"
 SUNWAIT_COMMAND = "sunwait {args} $X10_LAT $X10_LNG"
-RANDOM_COMMAND = "sleep $(( (RANDOM%{minutes})*60 ))"
+RANDOM_COMMAND = "sleep $(( (RANDOM%({minutes}+1))*60 ))" # add 1 to allow modulus to reach {minutes}
+                                                          # also prevents division by zero
 
 COMMENT_CHAR = "#"
 TIME_COMMAND_SEP = ";"
@@ -125,13 +126,9 @@ def parse(line):
     minute = time[1] # these should always be present
     hour = time[0]
     sunwait = NULL_COMMAND
-    random = NULL_COMMAND
+    random = RANDOM_COMMAND.format(minutes=random_minutes)
     command = X10_COMMAND.format(args=command_part, \
                                  log=LOG_FILE)
-
-    # prevent a division by zero in the random wait
-    if random_minutes > 0:
-        random = RANDOM_COMMAND.format(minutes=random_minutes)
 
     if astro:
         args = ""
