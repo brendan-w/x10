@@ -22,7 +22,8 @@ fi
 
 echo $(date) "-- X10 $@"
 
-# run each command
+# run each command multiple times to ensure successful transmission
+# ugly, but helps...
 for i in seq 3
 do
     br $@ --port=/dev/ttyUSB0
