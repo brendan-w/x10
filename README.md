@@ -14,7 +14,9 @@ These instructions are for installation on a Raspberry Pi
 - compile and install [`br`](http://www.linuxha.com/bottlerocket/)
 - compile and install [`sunwait`](http://risacher.org/sunwait/)
 - clone into the home directory with `git clone https://github.com/brendan-w/x10.git ~/`
+- insert `. ~/x10_aliases.sh` in your `.bashrc`
 - update your schedule with `~/edit_x10.sh`
+- optionally, `cp ~/motd /etc/motd` for friendly login screen
 
 
 Porcelain Commands
