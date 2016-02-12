@@ -48,5 +48,5 @@ dusk ; C1 ON               # turns on C1 at dusk
 dusk +15 ; C1 ON           # turns on C1 15 minutes AFTER dusk
 dusk -15 ; C1 ON           # turns on C1 15 minutes BEFORE dusk
 dusk ~15 ; C1 ON           # turns on C1 at a random time between dusk, and 15 minutes AFTER dusk
-dusk +30 ~15 ; C1 ON       # turns on C1 at a random time between "30 minutes after dusk", and 15 minutes AFTER "30 minutes after dusk"
+dusk +30 ~15 ; C1 ON       # turns on C1 at a random time between "30 minutes after dusk" and "45 minutes after dusk"
 ```
