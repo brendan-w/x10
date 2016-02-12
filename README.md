@@ -19,3 +19,4 @@ These files must be generated before the system will work. They are ignored by g
 
 - `location.sh`: file providing `$X10_LAT` and `$X10_LNG`
 - `schedule.x10`: your schedule file, following the format in `sample.x10`
+- `base.crontab`: the crontab to which your X10 events will be appended to
