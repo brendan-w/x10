@@ -46,8 +46,13 @@ def parse_time(token):
     hour = int(token[:colon])
     minute = int(token[colon+1:-2]) # -2 discards AM/PM
 
+    # convert to 24 hour, and handle noon/midnight transitions
     if token.endswith("pm"):
-        hour += 12
+        if hour < 12:
+            hour += 12
+    elif token.endswith("am"):
+        if hour == 12:
+            hour = 0
 
     return (hour, minute)
 
