@@ -1,0 +1,7 @@
+
+# ignore everything in here
+*
+
+# but keep the directory in the repo
+!.gitignore
+
