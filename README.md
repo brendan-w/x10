@@ -8,7 +8,8 @@ Porcelain Commands
 ------------------
 
 - `edit_sched.sh` editor and loader for the X10 schedule file
-- `x10.sh` main control script for sending x10 commands
+- `x10.sh` main control script for sending X10 commands
+- `whenis.sh` wrapper around `sunwait` for easily reading dusk/dawn times
 
 
 User Files
