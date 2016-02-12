@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 
 """
     This script converts custom X10 schedule files into crontab lines.
