@@ -32,3 +32,25 @@ These files must be generated before the system will work. They are ignored by g
 
 - `location.sh`: file providing `$X10_LAT` and `$X10_LNG`
 - `schedule.x10`: your schedule file, following the format in `sample.x10`
+
+
+X10 Schedule
+------------
+
+X10 Schedule files follow this format:
+
+```shell
+# <TIME>|dusk|dawn [+|-<OFFSET>] [~<RANDOMNESS>] ; <X10_CODE> <X10_COMMAND>
+
+# for instance:
+
+2:00am ; C1 OFF            # turns off C1 at 2:00am
+2:00am -30 ; C1 OFF        # turns off C1 at 1:30am
+2:00am -30 ~15 ; C1 OFF    # turns off C1 at a random time between 1:30am and 1:45am
+dusk ; C1 ON               # turns on C1 at dusk
+dusk +15 ; C1 ON           # turns on C1 15 minutes AFTER dusk
+dusk -15 ; C1 ON           # turns on C1 15 minutes BEFORE dusk
+dusk ~15 ; C1 ON           # turns on C1 at a random time between dusk, and 15 minutes AFTER dusk
+dusk +30 ~15 ; C1 ON       # turns on C1 at a random time between "30 minutes after dusk", and 15 minutes AFTER "30 minutes after dusk"
+
+```
