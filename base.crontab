@@ -2,6 +2,8 @@ SHELL=/bin/bash
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin
 MAILTO=x10
 
+X10_LOG=/home/x10/log.txt
+
 # For details see man 4 crontabs
 
 # Example of job definition:

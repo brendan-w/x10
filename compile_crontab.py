@@ -11,12 +11,11 @@ import sys
 import re
 import datetime
 
-LOG_FILE = "/home/x10/x10.log"
 
 DEFAULT_CRON_LINE = "{minute} {hour} * * * {sunwait} ; {random} ; {command}"
 
 NULL_COMMAND = "true"
-X10_COMMAND = "/home/x10/x10.sh {args} >> {log} 2>&1"
+X10_COMMAND = "/home/x10/x10.sh {args} >> $X10_LOG 2>&1"
 SUNWAIT_COMMAND = "sunwait {args} $X10_LAT $X10_LNG"
 RANDOM_COMMAND = "sleep $(( (RANDOM%({minutes}+1))*60 ))" # add 1 to allow modulus to reach {minutes}
                                                           # also prevents division by zero
@@ -132,8 +131,7 @@ def parse(line):
     hour = time[0]
     sunwait = NULL_COMMAND
     random = RANDOM_COMMAND.format(minutes=random_minutes)
-    command = X10_COMMAND.format(args=command_part, \
-                                 log=LOG_FILE)
+    command = X10_COMMAND.format(args=command_part)
 
     if astro:
         args = ""
