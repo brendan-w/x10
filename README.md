@@ -4,6 +4,19 @@ X10
 Personal X10 home automation framework based on `cron`, `br`, and `sunwait`
 
 
+Installation
+------------
+
+These instructions are for installation on a Raspberry Pi
+
+- create an `x10` user with home directory `/home/x10`
+- add `x10` user to the `dialout` group with `usermod -a -G dialout x10`
+- compile and install [`br`](http://www.linuxha.com/bottlerocket/)
+- compile and install [`sunwait`](http://risacher.org/sunwait/)
+- clone into the home directory with `git clone https://github.com/brendan-w/x10.git ~/`
+- update your schedule with `~/edit_x10.sh`
+
+
 Porcelain Commands
 ------------------
 
@@ -19,4 +32,3 @@ These files must be generated before the system will work. They are ignored by g
 
 - `location.sh`: file providing `$X10_LAT` and `$X10_LNG`
 - `schedule.x10`: your schedule file, following the format in `sample.x10`
-- `base.crontab`: the crontab to which your X10 events will be appended to
