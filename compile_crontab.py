@@ -156,15 +156,6 @@ def parse(line):
 
 
 
-def strip_comments(line):
-    if COMMENT_CHAR in line:
-        # remove all characters after the first comment char
-        line = line[:line.index(COMMENT_CHAR)]
-
-    return line
-
-
-
 def main(sched_filename):
     entries = []
 
@@ -172,7 +163,11 @@ def main(sched_filename):
         rawlines = sched.readlines()
 
         for i, line in enumerate(rawlines):
-            line = strip_comments(line) # remove comments
+
+            # remove comments
+            if COMMENT_CHAR in line:
+                line = line[:line.index(COMMENT_CHAR)]
+
             line = line.strip() # strip newlines and leading/trailling spaces
 
             if not line:
