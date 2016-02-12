@@ -3,7 +3,7 @@
 # the default schedule file
 SCHEDULE=~/schedule.x10
 TMP_CRONTAB=/tmp/x10.crontab
-CRONTAB_PARTS=./header.crontab ./location.crontab
+CRONTAB_PARTS=./header.crontab ./location.sh
 
 # or, if the user specified a schedule file
 if [ "$#" -e 1 ]; then

@@ -1,6 +1,6 @@
 
 # never store my location or schedule
-location.crontab
+location.sh
 schedule.x10
 
 # Created by https://www.gitignore.io/api/python
