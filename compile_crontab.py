@@ -17,8 +17,7 @@ DEFAULT_CRON_LINE = "{minute} {hour} * * * {sunwait} ; {random} ; {command}"
 NULL_COMMAND = "true"
 X10_COMMAND = "/home/x10/x10.sh {args} >> $X10_LOG 2>&1"
 SUNWAIT_COMMAND = "sunwait {args} $X10_LAT $X10_LNG"
-RANDOM_COMMAND = "sleep $(( (RANDOM%({minutes}+1))*60 ))" # add 1 to allow modulus to reach {minutes}
-                                                          # also prevents division by zero
+RANDOM_COMMAND = "/home/x10/random_sleep.sh {minutes}"
 
 COMMENT_CHAR = "#"
 TIME_COMMAND_SEP = ";"
