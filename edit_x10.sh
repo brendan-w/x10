@@ -13,13 +13,14 @@ fi
 # let the user edit the schedule
 nano -Y sh $SCHEDULE
 
-# kill any lingering sunwaits, since they have probably been altered
+# kill any lingering sunwaits/x10 commands, since they have probably been altered
 
-# kill the cron line first
+# kill the bash line spawned by cron first
 # if you only kill the sunwaits themselves, bash will
 # move on and execute the X10 commands
-pkill -f " -c sunwait" # the bash that cron spawned
-pkill -f "sunwait" # the actual sunwaits
+pkill -f "/home/x10/x10.sh" # kill all waiting x10 commands
+pkill -f "/home/x10/random_sleep.sh" # kill all random_sleeps
+pkill -f "sunwait" # kill all sunwaits
 
 # compile and write the X10 crontab
 ./compile_crontab.py $SCHEDULE | cat ~/base.crontab ~/location.sh - > $TMP_CRONTAB
