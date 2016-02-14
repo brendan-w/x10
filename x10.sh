@@ -27,7 +27,7 @@ echo $(date) "-- X10 $@"
 for i in seq 3
 do
     br $@ --port=/dev/ttyUSB0
-    sleep 5
+    sleep 15
 done
 
 # release our lock
