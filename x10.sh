@@ -5,7 +5,12 @@ if test $# -eq 0
 then
     # print the intro text with command samples
     cat /etc/motd
-    echo "for  details on the x10 command itself, type: br --help"
+    echo "x10 command usage:"
+    echo "    x10 MODULE COMMAND [DIMLEVEL]"
+    echo ""
+    echo "    MODULE: C5"
+    echo "    COMMAND: ON, OFF, DIM"
+    echo "    DIMLEVEL: a number between -12 and 12"
     echo ""
     exit 0
 fi
