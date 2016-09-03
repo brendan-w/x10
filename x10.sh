@@ -20,7 +20,7 @@ help() {
 # if there are no arguments, show help
 if [ $# -lt 2 ] ; then
     help
-    exit 0
+    exit 1
 fi
 
 module=$1
@@ -30,13 +30,13 @@ command=${2^^} # force to upper case
 if [[ ! "ON|OFF|DIM" =~ $command ]] ; then
     echo "Invalid command: $2" 1>&2
     help
-    exit 0
+    exit 1
 fi
 
 if [ ${#module} -lt 2 ] ; then
     echo "Invalid module code: $1" 1>&2
     help
-    exit 0
+    exit 1
 fi
 
 house=${module:0:1}
@@ -59,24 +59,24 @@ echo $(date) "-- X10 $@"
 # ------------- run command -------------
 
 if [ $command = "DIM" ] ; then
-
     # make sure we got a third arg for DIMLEVEL
     if [ $# -ne 3 ] ; then
         help
-        exit 0
+        exit 1
     fi
 
     # DIM commands actually take 2 commands. One to select
     # the module, and the other to do the dimming
-    br $module OFF $br_port
-    br --house=$house --dim=$3 $house DIM $br_port
+    br $br_port $module OFF
+    sleep 1 # we've seen problems sending commands this closely
+    br $br_port --house=$house --dim=$3 $house DIM
 else
     # normal ON/OFF
     # run each command multiple times to ensure successful transmission
     # ugly, but helps...
     for i in seq $repeat
     do
-        br $module $command $br_port
+        br $br_port $module $command
         sleep $repeat_wait
     done
 fi
