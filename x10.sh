@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# global settings
+br_port="--port=/dev/ttyUSB0"
+repeat=3
+repeat_wait=15
+
 help() {
     # print the intro text with command samples
     cat /etc/motd
@@ -53,10 +58,10 @@ echo $(date) "-- X10 $@"
 
 # run each command multiple times to ensure successful transmission
 # ugly, but helps...
-for i in seq 3
+for i in seq $repeat
 do
-    br $@ --port=/dev/ttyUSB0
-    sleep 15
+    br $@ $br_port
+    sleep $repeat_wait
 done
 
 # release our lock
