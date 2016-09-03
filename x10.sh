@@ -24,10 +24,10 @@ if [ $# -lt 2 ] ; then
 fi
 
 module=$1
-command=$2
+command=${2^^} # force to upper case
 
 # error check the input
-if [[ ! "ON|OFF|DIM" =~ ${command^^} ]] ; then
+if [[ ! "ON|OFF|DIM" =~ $command ]] ; then
     echo "Invalid command: $2" 1>&2
     help
     exit 0
@@ -40,7 +40,9 @@ if [ ${#module} -lt 2 ] ; then
 fi
 
 house=${module:0:1}
-code=${module:1}
+code=${module:1} # not used, but here just in case
+
+# ---------- locking and logging ----------
 
 # include the bash mutex
 . ./bashlock.sh
@@ -54,15 +56,30 @@ fi
 # for logging
 echo $(date) "-- X10 $@"
 
-# ---------- run command ----------
+# ------------- run command -------------
 
-# run each command multiple times to ensure successful transmission
-# ugly, but helps...
-for i in seq $repeat
-do
-    br $@ $br_port
-    sleep $repeat_wait
-done
+if [ $command = "DIM" ] ; then
 
-# release our lock
+    # make sure we got a third arg for DIMLEVEL
+    if [ $# -ne 3 ] ; then
+        help
+        exit 0
+    fi
+
+    # DIM commands actually take 2 commands. One to select
+    # the module, and the other to do the dimming
+    br $module OFF $br_port
+    br --house=$house --dim=$3 $house DIM $br_port
+else
+    # normal ON/OFF
+    # run each command multiple times to ensure successful transmission
+    # ugly, but helps...
+    for i in seq $repeat
+    do
+        br $module $command $br_port
+        sleep $repeat_wait
+    done
+fi
+
+# ---------------- unlock ----------------
 unlock ~/locks/x10
