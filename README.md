@@ -40,7 +40,7 @@ X10 Schedule Format
 -------------------
 
 ```shell
-# <TIME>|dusk|dawn [+|-<OFFSET>] [~<RANDOMNESS>] ; <X10_CODE> <X10_COMMAND>
+# <TIME>|dusk|dawn [+|-<OFFSET>] [~<RANDOMNESS>] ; <X10_CODE> <X10_COMMAND> [<X10_DIMLEVEL>]
 
 # for instance:
 2:00am ; C1 OFF            # turns off C1 at 2:00am
@@ -51,4 +51,8 @@ dusk +15 ; C1 ON           # turns on C1 15 minutes AFTER dusk
 dusk -15 ; C1 ON           # turns on C1 15 minutes BEFORE dusk
 dusk ~15 ; C1 ON           # turns on C1 at a random time between dusk, and 15 minutes AFTER dusk
 dusk +30 ~15 ; C1 ON       # turns on C1 at a random time between "30 minutes after dusk" and "45 minutes after dusk"
+
+# Dimming is done like this:
+
+2:00am ; C5 DIM -5         # turns on C5 and dims it by -5
 ```

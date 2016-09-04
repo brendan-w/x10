@@ -14,7 +14,10 @@ __/\\\_______/\\\______/\\\_____/\\\\\\\____
 
 Sample commands:
 
-x10 C2 off
+x10 C2 ON
+x10 C2 OFF
+x10 C2 DIM -5
+
 x10_sched
 x10_log
 whenis dusk

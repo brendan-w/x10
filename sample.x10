@@ -1,8 +1,7 @@
 
 # All entries follow this format. Whitespace matters.
 #
-#    <TIME> <OFFSET> <RANDOMNESS> ; <X10_CODE> <X10_COMMAND>
-#
+#    <TIME> <OFFSET> <RANDOMNESS> ; <X10_COMMAND>
 #
 # The <TIME> <OFFSET> <RANDOMNESS> parts can be in any order, as long as they
 # come before the semicolon.
@@ -23,9 +22,10 @@
 #                 this random offset will be ADDED to any previous specified offsets
 #                 NOTE: ~X can only be used as a positive offset (AFTER the time)
 
-# <X10_CODE> <X10_COMMAND> can be:
+# <X10_COMMAND> can be:
 #    C2 ON
 #    C2 OFF
+#    C2 DIM -5    a third argument between -12 and 12 will specify the amount to dim the light
 
 
 # Here are some sample entries:
@@ -38,3 +38,7 @@ dusk +15 ; C1 ON           # turns on C1 15 minutes AFTER dusk
 dusk -15 ; C1 ON           # turns on C1 15 minutes BEFORE dusk
 dusk ~15 ; C1 ON           # turns on C1 at a random time between dusk, and 15 minutes AFTER dusk
 dusk +30 ~15 ; C1 ON       # turns on C1 at a random time between "30 minutes after dusk" and "45 minutes after dusk"
+
+# Dimming is done like this:
+
+2:00am ; C5 DIM -5         # turns on C5 and dims it by -5
